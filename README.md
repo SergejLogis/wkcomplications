@@ -1,4 +1,4 @@
-# wkcomplications
+# WKCcomplications
 _Minimum Reproducible Example_ app to demonstrate the issue with `WidgetKit` complications not updating (watchOS 9/10)
 
 - If the watch app is in the **foreground**, data is transmitted from the companion iPhone app immediately and content is updated in both app and widgets on the watch.

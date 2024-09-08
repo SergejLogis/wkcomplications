@@ -22,6 +22,10 @@ struct MainAppView: View {
             }
 
             VStack {
+                Button("Send App Context Update to Watch") {
+                    manager.sendAppContextUpdateMessageToWatch(value: value)
+                }
+
                 Button("Send value to Watch") {
                     manager.sendUpdateMessageToWatch(value: value)
                 }

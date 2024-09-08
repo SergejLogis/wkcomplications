@@ -9,5 +9,11 @@ struct WKComplicationsWatch_Watch_AppApp: App {
                     WatchManager.start()
                 }
         }
+        .backgroundTask(.watchConnectivity) { _ in
+            logger.info("Received WatchConnectivity background task")
+
+            Haptics.success()
+            WatchManager.shared.updateWidgetKiComplications()
+        }
     }
 }

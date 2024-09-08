@@ -78,6 +78,21 @@ class WatchManager: NSObject, ObservableObject {
 #if os(iOS)
 extension WatchManager {
     
+    func sendAppContextUpdateMessageToWatch(value: Int) {
+        guard session.isReachable else {
+            return logger.error("Watch not reachable!")
+        }
+        
+        logger.info("Sending App Context Update to Watch: \(value)")
+
+        let message = watchMessage(value: value)
+        do {
+            try session.updateApplicationContext(message)
+        } catch {
+            logger.error("Error sending App Context Update to Watch: \(error.localizedDescription)")
+        }
+    }
+
     func sendUpdateMessageToWatch(value: Int) {
         guard session.isReachable else {
             return logger.error("Watch not reachable!")
@@ -137,7 +152,7 @@ extension WatchManager {
         }
     }
 
-    private func updateWidgetKiComplications() {
+    func updateWidgetKiComplications() {
         WidgetCenter.shared.getCurrentConfigurations { result in
             guard case .success(let widgets) = result else {
                 return logger.warning("No widgets are installed on Watch!")
@@ -157,6 +172,14 @@ extension WatchManager {
 // MARK: - WCSessionDelegate
 
 extension WatchManager: WCSessionDelegate {
+
+    func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
+        #if os(watchOS)
+        handleMessage(applicationContext, replyHandler: nil)
+        #else
+        assertionFailure("Watch to iPhone communication not implemented!")
+        #endif
+    }
 
     func session(
         _ session: WCSession,
